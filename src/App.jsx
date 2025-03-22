@@ -3,15 +3,17 @@ import Dashboard from "./pages/Dashboard";
 import AppLayout from "./pages/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import React from "react";
-// import Setting from "./pages/Setting";
-// import Portfolios from "./pages/Portfolios";
-// import Analytics from "./pages/Analytics";
-// import Support from "./pages/Support";
-// import Transaction from "./pages/Transaction";
+
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PreferenceForm from "./components/PreferenceForm";
+import Analytics from "./pages/Analytics";
+import Portfolio from "./pages/Portfolio";
+import Watchlist from "./pages/Watchlist";
+import Transaction from "./pages/Transaction";
+import Chat from "./pages/Chat";
+import Support from "./pages/Support";
 // import SearchStocks from "./components/SearchStocks";
 // import StockAnalytics from "./components/StockAnalytics";
 
@@ -34,13 +36,14 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
-            {/* <Route path="dashboard/stocks" element={<StockAnalytics />} />
-            <Route path="portfolios" element={<Portfolios />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="support" element={<Support />} />
-            <Route path="transactions" element={<Transaction />} />
-            <Route path="settings" element={<Setting />} /> */}
-            <Route path="preference-form" element={<PreferenceForm />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/portfolios" element={<Portfolio />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/transactions" element={<Transaction />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/preference-form" element={<PreferenceForm />} />
+            <Route path="/support" element={<Support />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>

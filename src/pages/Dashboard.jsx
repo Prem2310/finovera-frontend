@@ -1,18 +1,31 @@
 import React from "react";
 import DashboardCard from "../components/ui/DashboardCard";
-import { HiBanknotes, HiInbox } from "react-icons/hi2";
+import {
+  HiBanknotes,
+  HiInbox,
+  HiPaperAirplane,
+  HiSparkles,
+} from "react-icons/hi2";
 import { HiTrendingUp } from "react-icons/hi";
 import PageHeading from "../components/ui/PageHeading";
 import Button from "../components/Button";
+import RecommendedStockCard from "../components/ui/RecommendedStockCard";
 function Dashboard() {
   return (
     <div>
-      <div className="flex">
+      <div className="flex justify-between">
         <PageHeading>Dashboard</PageHeading>
         <div className="flex gap-4">
-          <Button ></Button>
+          <Button
+            icon={<HiSparkles />}
+            type="primary"
+            className=" tracking-wide"
+          >
+            Portfolio insights
+          </Button>
         </div>
       </div>
+      {/* dashboard card */}
       <div className="flex flex-nowrap gap-4">
         <DashboardCard
           title="Realised Gains"
@@ -42,6 +55,18 @@ function Dashboard() {
           comparisonText="from last month"
         />
       </div>
+
+    <p className="py-4 font-medium text-xl">Your personalized picks</p>
+      <RecommendedStockCard
+        stockName="Apple Inc."
+        stockSymbol="AAPL"
+        price="178.72"
+        currency="$"
+        icon={<HiPaperAirplane />}
+        percentageChange="2.43"
+        trend="up"
+        recommendation="buy"
+      />
     </div>
   );
 }
