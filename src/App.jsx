@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import AppLayout from "./pages/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
-import React from 'react'
+import React from "react";
 // import Setting from "./pages/Setting";
 // import Portfolios from "./pages/Portfolios";
 // import Analytics from "./pages/Analytics";
@@ -11,6 +11,7 @@ import React from 'react'
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import PreferenceForm from "./components/PreferenceForm";
 // import SearchStocks from "./components/SearchStocks";
 // import StockAnalytics from "./components/StockAnalytics";
 
@@ -39,6 +40,7 @@ function App() {
             <Route path="support" element={<Support />} />
             <Route path="transactions" element={<Transaction />} />
             <Route path="settings" element={<Setting />} /> */}
+            <Route path="preference-form" element={<PreferenceForm />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
