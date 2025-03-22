@@ -1,4 +1,4 @@
-import {  HiOutlineSparkles } from "react-icons/hi2";
+import { HiOutlineSparkles } from "react-icons/hi2";
 import OrderTypeChip from "./OrderTypeChip";
 
 function RecommendedStockCard({
@@ -6,18 +6,26 @@ function RecommendedStockCard({
   stockSymbol,
   price,
   currency = "₹",
-  icon,
   percentageChange,
   trend = "up",
   recommendation = "BUY",
   showOptions = true,
 }) {
+  const getInitials = (name) => {
+    if (!name) return "";
+
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase();
+  };
   return (
     <div className="border border-slate-300 bg-white rounded-md shadow-sm p-4 w-64">
       <div className="flex items-center gap-2 justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xl text-slate-500 p-2 border border-slate-300 rounded-md inline-block">
-            {icon}
+          <span className="text-xl font-bold text-indigo-600 p-2 border border-slate-300 rounded-md inline-block">
+            {getInitials(stockName)}
           </span>
           <div>
             <p className="font-medium tracking-tight text-slate-800">
@@ -38,7 +46,7 @@ function RecommendedStockCard({
             <span className="text-slate-400 font-medium">{currency}</span>{" "}
             {price}
           </p>
-         <OrderTypeChip type={recommendation} />
+          <OrderTypeChip type={recommendation} />
         </div>
         {percentageChange && (
           <p className="text-xs text-slate-400 font-medium mt-2">

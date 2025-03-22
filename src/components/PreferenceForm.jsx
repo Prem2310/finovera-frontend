@@ -6,6 +6,7 @@ import Button from "./Button";
 const PreferenceForm = () => {
   const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
+      nameOfPortfolio: "",
       investmentGoal: "",
       investmentHorizon: "",
       riskTolerance: "Medium",
@@ -84,6 +85,19 @@ const PreferenceForm = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Controller
+          name="nameOfPortfolio"
+          control={control}
+          render={({ field }) => (
+            <FormInput
+              label="Enter your portfolio name"
+              type="text"
+              placeholder="Enter portfolio name"
+              className="bg-gray-50 border-gray-200 focus:ring-slate-900"
+              {...field}
+            />
+          )}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Controller
             name="investmentGoal"
