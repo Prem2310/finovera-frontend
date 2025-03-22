@@ -1,17 +1,102 @@
-import React from "react";
+import React, { useState } from "react";
 import RecommendedStockCard from "../components/ui/RecommendedStockCard";
 import PageHeading from "../components/ui/PageHeading";
 import StockChart from "../components/StockChart";
+import WatchlistBar from "../components/ui/WatchlistBar";
+
 function Watchlist() {
+  // State to track the currently selected stock for the chart
+  const [selectedStock, setSelectedStock] = useState({
+    instrumentKey: "INE467B01029",
+    stockName: "TCS",
+  });
+
+  // Watchlist data - could be fetched from an API in a real application
+  const watchlistData = [
+    {
+      companyName: "Mazgondock Shipyard",
+      price: "1459.3",
+      percentageChange: "2.1",
+      instrumentKey: "INE502A01027",
+    },
+    {
+      companyName: "TCS",
+      price: "3895.6",
+      percentageChange: "-0.8",
+      instrumentKey: "INE009A01021",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+    {
+      companyName: "HDFC Bank",
+      price: "1642.5",
+      percentageChange: "1.3",
+      instrumentKey: "INE040A01034",
+    },
+  ];
+
+  // Handler for when a watchlist item is clicked
+  const handleWatchlistItemClick = (item) => {
+    setSelectedStock({
+      instrumentKey: item.instrumentKey,
+      stockName: item.companyName,
+    });
+  };
+
   return (
     <div>
       <div>
         <PageHeading>Watchlist and recommendation</PageHeading>
         <div>
-          <h2 className="mb-2 text-slate-900">
-            Personalised recommendations</h2>
+          <h2 className="mb-2 text-slate-900">Personalised recommendations</h2>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 overflow-x-auto pb-2">
           <RecommendedStockCard
             stockName="Reliance India"
             stockSymbol="RIL"
@@ -19,33 +104,48 @@ function Watchlist() {
             percentageChange="2.1%"
           />
           <RecommendedStockCard
-            stockName="Reliance India"
-            stockSymbol="RIL"
-            price="1459.3"
-            percentageChange="2.1%"
+            stockName="Infosys"
+            stockSymbol="INFY"
+            price="1780.5"
+            percentageChange="1.5%"
           />
           <RecommendedStockCard
-            stockName="Reliance India"
-            stockSymbol="RIL"
-            price="1459.3"
-            percentageChange="2.1%"
+            stockName="HDFC Bank"
+            stockSymbol="HDFCBANK"
+            price="1642.5"
+            percentageChange="1.3%"
           />
           <RecommendedStockCard
-            stockName="Reliance India"
-            stockSymbol="RIL"
-            price="1459.3"
-            percentageChange="2.1%"
+            stockName="TCS"
+            stockSymbol="TCS"
+            price="3895.6"
+            percentageChange="-0.8%"
           />
         </div>
         <div className="grid grid-cols-12 gap-4 mt-4">
-          <div className="col-span-12 md:col-span-4 p-4 border border-slate-300 rounded-md">
-            Your watchlist
+          <div className="col-span-12 md:col-span-4 p-2 border border-slate-300 rounded-md  flex flex-col">
+            <p className="mb-4 font-medium">Your watchlist</p>
+            <div className="overflow-y-auto flex-grow h-96">
+              {watchlistData.map((item, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleWatchlistItemClick(item)}
+                  className="cursor-pointer hover:bg-slate-50 transition-colors"
+                >
+                  <WatchlistBar
+                    companyName={item.companyName}
+                    price={item.price}
+                    percentageChange={item.percentageChange}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="col-span-12 md:col-span-8 p-4 border border-slate-300 rounded-md">
+          <div className="col-span-12 md:col-span-8 p-4 border h-fit border-slate-300 rounded-md">
             <StockChart
-              key={1}
-              instrumentKey={"INE009A01021"}
-              stockName={"TCS"}
+              key={selectedStock.instrumentKey}
+              instrumentKey={selectedStock.instrumentKey}
+              stockName={selectedStock.stockName}
             />
           </div>
         </div>

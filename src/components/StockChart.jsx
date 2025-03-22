@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart, AreaSeries, CandlestickSeries } from "lightweight-charts";
+import Button from "./Button";
 
 const StockChart = ({ instrumentKey, stockName }) => {
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
   const seriesRef = useRef(null);
-  const [chartType, setChartType] = useState("area"); // area or candle
+  const [chartType, setChartType] = useState("candle"); // area or candle
 
   const fetchData = async () => {
     try {
@@ -199,10 +200,12 @@ const StockChart = ({ instrumentKey, stockName }) => {
         }}
       >
         <h2>{stockName || "Stock"} Price Chart</h2>
-        <div className="chart-controls">
-          <button
+        <div className="chart-controls flex gap-2">
+          <Button
             onClick={() => handleChartTypeChange("area")}
-            className={`chart-type-btn ${chartType === "area" ? "active" : ""}`}
+            className={`chart-type-btn ${
+              chartType === "area" ? "active bg-slate-900 text-white" : "border"
+            }`}
             style={{
               padding: "6px 12px",
               marginRight: "8px",
@@ -214,11 +217,13 @@ const StockChart = ({ instrumentKey, stockName }) => {
             }}
           >
             Area
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => handleChartTypeChange("candle")}
             className={`chart-type-btn ${
-              chartType === "candle" ? "active" : ""
+              chartType === "candle"
+                ? "active bg-slate-900 text-white"
+                : "border"
             }`}
             style={{
               padding: "6px 12px",
@@ -230,7 +235,7 @@ const StockChart = ({ instrumentKey, stockName }) => {
             }}
           >
             Candlestick
-          </button>
+          </Button>
         </div>
       </div>
       <div

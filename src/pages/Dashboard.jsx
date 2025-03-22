@@ -56,7 +56,7 @@ function Dashboard() {
         />
       </div>
 
-    <p className="py-4 font-medium text-xl">Your personalized picks</p>
+      <p className="py-2 font-medium">Your personalized picks</p>
       <RecommendedStockCard
         stockName="Apple Inc."
         stockSymbol="AAPL"

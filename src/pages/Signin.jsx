@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import FormInput from "../components/FormInput";
+import { useNavigate } from "react-router-dom";
+import { useLoginUser } from "../hooks/mutations/useUserboarding";
 
 const Signin = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,6 +18,8 @@ const Signin = () => {
       [name]: value,
     });
   };
+
+  const { mutate: loginMutate, isLoading } = useLoginUser({ navigate });
 
   const validateForm = () => {
     const newErrors = {};
@@ -37,8 +42,8 @@ const Signin = () => {
     e.preventDefault();
     if (validateForm()) {
       // Submit the form data to your API
+      loginMutate(formData);
       console.log("Signin form submitted:", formData);
-      alert("Sign in successful!");
       // Reset form after successful submission
       setFormData({
         email: "",

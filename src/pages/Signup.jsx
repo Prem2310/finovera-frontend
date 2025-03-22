@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import FormInput from "../components/FormInput";
+import { useSignupUser } from "../hooks/mutations/useUserboarding";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     username: "",
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const { mutate: signupMutate, isLoading } = useSignupUser({ navigate });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,10 +26,10 @@ const Signin = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName)
-      newErrors.firstName = { message: "First name is required" };
-    if (!formData.lastName)
-      newErrors.lastName = { message: "Last name is required" };
+    if (!formData.first_name)
+      newErrors.first_name = { message: "First name is required" };
+    if (!formData.last_name)
+      newErrors.last_name = { message: "Last name is required" };
     if (!formData.username)
       newErrors.username = { message: "Username is required" };
 
@@ -52,11 +56,11 @@ const Signin = () => {
     if (validateForm()) {
       // Submit the form data to your API
       console.log("Signup form submitted:", formData);
-      alert("Signup successful!");
+      signupMutate(formData);
       // Reset form after successful submission
       setFormData({
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         username: "",
         email: "",
         password: "",
@@ -84,7 +88,7 @@ const Signin = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row gap-4">
               <FormInput
-                name="firstName"
+                name="first_name"
                 label="First Name"
                 register={register}
                 errors={errors}
@@ -92,7 +96,7 @@ const Signin = () => {
               />
 
               <FormInput
-                name="lastName"
+                name="last_name"
                 label="Last Name"
                 register={register}
                 errors={errors}
