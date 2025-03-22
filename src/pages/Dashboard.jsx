@@ -4,12 +4,15 @@ import {
   HiBanknotes,
   HiInbox,
   HiPaperAirplane,
+  HiPlus,
   HiSparkles,
 } from "react-icons/hi2";
 import { HiTrendingUp } from "react-icons/hi";
 import PageHeading from "../components/ui/PageHeading";
 import Button from "../components/Button";
 import RecommendedStockCard from "../components/ui/RecommendedStockCard";
+import StockPortfolioTable from "../components/StockPortfolioTable";
+// import DataTable from "../components/DataTable";
 function Dashboard() {
   return (
     <div>
@@ -22,6 +25,9 @@ function Dashboard() {
             className=" tracking-wide"
           >
             Portfolio insights
+          </Button>
+          <Button type="outline" icon={<HiPlus />}>
+            Add transaction
           </Button>
         </div>
       </div>
@@ -62,11 +68,12 @@ function Dashboard() {
         stockSymbol="AAPL"
         price="178.72"
         currency="$"
-        icon={<HiPaperAirplane />}
         percentageChange="2.43"
         trend="up"
         recommendation="buy"
       />
+      <p className="py-4">Transaction table</p>
+      <StockPortfolioTable/>
     </div>
   );
 }

@@ -35,7 +35,7 @@ function AppLayout() {
 
   const navItems = [
     { path: "/dashboard", icon: HiOutlineRectangleGroup, label: "Dashboard" },
-    { path: "/analytics", icon: HiOutlineReceiptPercent, label: "Tax" },
+    { path: "/taxes", icon: HiOutlineReceiptPercent, label: "Tax" },
     { path: "/portfolios", icon: HiOutlineBriefcase, label: "Portfolios" },
     { path: "/watchlist", icon: HiOutlineRectangleStack, label: "Watchlist" },
     {

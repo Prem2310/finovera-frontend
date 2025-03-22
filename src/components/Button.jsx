@@ -9,7 +9,7 @@ function Button({
   disabled,
 }) {
   const baseStyle =
-    "rounded-md md:py-2 md:px-3 text-xs p-2 transition-all ease-in md:text-sm w-fit h-fit inline-flex items-center justify-center gap-2 font-medium";
+    "rounded-md md:py-2 md:px-3 text-xs p-2 transition-all ease-in md:text-sm w-fit h-fit inline-flex items-center justify-center gap-2 font-medium cursor-pointer";
 
   const styles = {
     primary: "bg-slate-800 hover:bg-slate-900 text-white",
