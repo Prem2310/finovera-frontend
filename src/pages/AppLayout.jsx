@@ -11,10 +11,13 @@ import {
   HiOutlineArrowsRightLeft,
   HiOutlineBriefcase,
   HiOutlineChartBar,
+  HiOutlineChatBubbleLeftRight,
   HiOutlineCog6Tooth,
   HiOutlineLifebuoy,
   HiOutlinePresentationChartLine,
+  HiOutlineReceiptPercent,
   HiOutlineRectangleGroup,
+  HiOutlineRectangleStack,
   HiOutlineUsers,
 } from "react-icons/hi2";
 import PathNavigation from "../components/ui/Pathnavigation";
@@ -32,15 +35,16 @@ function AppLayout() {
 
   const navItems = [
     { path: "/dashboard", icon: HiOutlineRectangleGroup, label: "Dashboard" },
-    { path: "/analytics", icon: HiOutlineChartBar, label: "Chart" },
+    { path: "/analytics", icon: HiOutlineReceiptPercent, label: "Tax" },
     { path: "/portfolios", icon: HiOutlineBriefcase, label: "Portfolios" },
+    { path: "/watchlist", icon: HiOutlineRectangleStack, label: "Watchlist" },
     {
       path: "/transactions",
       icon: HiOutlineArrowsRightLeft,
-      label: "Transactions",
+      label: "Transaction History",
     },
-    { path: "/settings", icon: HiOutlineCog6Tooth, label: "Settings" },
-    { path: "/support", icon: HiOutlineLifebuoy, label: "Support" },
+    { path: "/chat", icon: HiOutlineChatBubbleLeftRight, label: "Finbot" },
+    { path: "/support", icon: HiOutlineLifebuoy, label: "Learning center" },
   ];
 
   return (
@@ -72,6 +76,9 @@ function AppLayout() {
           </div>
           <div onClick={() => navigate("/settings")}>
             {/* <UserButton /> */}
+            <div>
+              <span className="p-2 rounded-full bg-slate-900 w-12 h-12 ">AC</span>
+            </div>
           </div>
         </div>
         <div className="bg-slate-50 overflow-auto p-4">
