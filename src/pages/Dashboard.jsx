@@ -12,8 +12,11 @@ import PageHeading from "../components/ui/PageHeading";
 import Button from "../components/Button";
 import RecommendedStockCard from "../components/ui/RecommendedStockCard";
 import StockPortfolioTable from "../components/StockPortfolioTable";
+import { useGetUserTrnasMutation } from "../hooks/mutations/useGetUserTrnasMutation";
+import UploadCSV from "../components/UploadXls";
 // import DataTable from "../components/DataTable";
 function Dashboard() {
+  const {transactionData, isLoading, isError} = useGetUserTrnasMutation();
   return (
     <div>
       <div className="flex justify-between">
@@ -29,6 +32,7 @@ function Dashboard() {
           <Button type="outline" icon={<HiPlus />}>
             Add transaction
           </Button>
+          <UploadCSV/>
         </div>
       </div>
       {/* dashboard card */}
@@ -73,7 +77,7 @@ function Dashboard() {
         recommendation="buy"
       />
       <p className="py-4">Transaction table</p>
-      <StockPortfolioTable/>
+      <StockPortfolioTable data={transactionData} />
     </div>
   );
 }

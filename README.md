@@ -13,6 +13,14 @@ If you are developing a production application, we recommend using TypeScript an
 
 
 ##TODOS
-- add the stock transc component
-- add auth apis
-- do login and signup
+- add the stock transc component - done
+- add auth apis - done
+- do login and signup - done
+- preference form 
+- stock transc - table 
+- stock transc - tax
+- chat bot - imp
+- stock search 
+- stock csv upload
+- ppt
+- video

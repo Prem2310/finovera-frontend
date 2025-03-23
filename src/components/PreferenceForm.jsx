@@ -1,20 +1,23 @@
 import { useForm, Controller } from "react-hook-form";
 import FormInput from "./FormInput";
 import Button from "./Button";
+import { useSetUserPrefMutation } from "../hooks/mutations/useSetUserPrefMutation";
 
 const PreferenceForm = () => {
   const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
-      nameOfPortfolio: "",
-      investmentGoal: "",
-      investmentHorizon: "",
-      riskTolerance: "Medium",
-      yearsExperience: "",
-      monthlyIncome: "",
-      stockPercentage: 50,
-      sectors: [],
+      portfolio_name: "",
+      primary_goal: "",
+      investment_horizon: "",
+      risk_tolerance: "Medium",
+      investment_exp_years: "",
+      income: "",
+      percent_income_to_invest: 50,
+      preferable_sector: [],
     },
   });
+
+  const { mutate: setPreferenceMutate, isLoading } = useSetUserPrefMutation();
 
   // Watch values for UI updates
   const watchRiskTolerance = watch("riskTolerance");
@@ -22,6 +25,18 @@ const PreferenceForm = () => {
   const watchStockPercentage = watch("stockPercentage");
 
   const onSubmit = (data) => {
+    const newData = {
+      portfolio_name: data.nameOfPortfolio,
+      primary_goal: data.investmentGoal,
+      investment_horizon: data.investmentHorizon,
+      risk_tolerance: data.riskTolerance,
+      investment_exp_years: Number(data.yearsExperience),
+      income: Number(data.monthlyIncome),
+      percent_income_to_invest: data.stockPercentage,
+      preferable_sector: data.sectors,
+      access_token: localStorage.getItem("access_token"),
+    };
+    setPreferenceMutate(newData);
     console.log("Form submitted:", data);
     // Handle form submission logic here
   };

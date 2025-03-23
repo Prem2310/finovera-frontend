@@ -9,22 +9,32 @@ import {
   YAxis,
 } from "recharts";
 
-export default function HoldingsChart({ holdings }) {
-   if (!holdings || holdings.length === 0) {
-     return (
-       <div className="h-[300px] w-full flex items-center justify-center text-gray-500">
-         <div className="text-center">
-           <p className="font-medium">No holdings data available</p>
-           <p className="text-sm">Connect your account to view P&L chart</p>
-         </div>
-       </div>
-     );
-   }
+export default function TransactionsChart({ transactions }) {
+  console.log(transactions)
+  if (!transactions || transactions.length === 0) {
+    return (
+      <div className="h-[300px] w-full flex items-center justify-center text-gray-500">
+        <div className="text-center">
+          <p className="font-medium">No transaction data available</p>
+          <p className="text-sm">Upload CSV file to view transaction data</p>
+        </div>
+      </div>
+    );
+  }
+
   // Transform data for the chart
-  const chartData = holdings?.map((holding) => ({
-    name: holding.tradingsymbol,
-    value: holding.profitandloss,
-    percentage: holding.pnlpercentage,
+  const chartData = transactions.map((transaction) => ({
+    name: transaction.stock_name,
+    value: transaction.realized_unrealized_pnl,
+    percentage: (
+      (transaction.realized_unrealized_pnl / transaction.buy_value) *
+      100
+    ).toFixed(2),
+    buyPrice: transaction.buy_price,
+    sellPrice: transaction.sell_price,
+    quantity: transaction.quantity,
+    buyDate: transaction.buy_date,
+    sellDate: transaction.sell_date,
   }));
 
   // Custom tooltip component
@@ -34,13 +44,23 @@ export default function HoldingsChart({ holdings }) {
       return (
         <div className="bg-white p-3 border border-gray-200 shadow-md rounded-md">
           <div className="font-medium">{data.name}</div>
+          <div className="text-gray-600">
+            Buy: ₹{data.buyPrice} x {data.quantity} ({data.buyDate})
+          </div>
+          <div className="text-gray-600">
+            Sell: ₹{data.sellPrice} x {data.quantity} ({data.sellDate})
+          </div>
           <div className={data.value >= 0 ? "text-green-500" : "text-red-500"}>
-            P&L: ₹{data?.value.toLocaleString()}
+            P&L: ₹{data.value.toLocaleString()}
           </div>
           <div
-            className={data.percentage >= 0 ? "text-green-500" : "text-red-500"}
+            className={
+              parseFloat(data.percentage) >= 0
+                ? "text-green-500"
+                : "text-red-500"
+            }
           >
-            {data?.percentage.toFixed(2)}%
+            {data.percentage}%
           </div>
         </div>
       );
@@ -69,7 +89,7 @@ export default function HoldingsChart({ holdings }) {
           />
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-            {chartData?.map((entry, index) => (
+            {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={entry.value >= 0 ? "#4ade80" : "#f87171"}

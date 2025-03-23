@@ -11,6 +11,8 @@ import { HiArrowDown, HiArrowUp, HiBars3, HiChartPie } from "react-icons/hi2";
 import HoldingsChart from "../components/HoldingsChart";
 import PieChartComponent from "../components/PieChartComponent";
 import HoldingsTable from "../components/HoldingsTable";
+import TransactionsChart from "../components/TransactionsChart";
+import { useGetUserTrnasMutation } from "../hooks/mutations/useGetUserTrnasMutation";
 
 const mockData = {
   status: true,
@@ -103,13 +105,35 @@ const mockData = {
   },
 };
 
+// CSV transaction data
+const csvTransactionData = [
+  {
+    ISIN: "INE129A01019",
+    buy_date: "2024-03-14",
+    buy_price: 174,
+    buy_value: 1740,
+    created_at: "2025-03-23T04:10:27.388123+00:00",
+    current_value: 0,
+    id: 1231,
+    quantity: 10,
+    realized_unrealized_pnl: 380,
+    sell_date: "2024-04-18",
+    sell_price: 212,
+    sell_value: 2120,
+    stock_name: "GAIL (INDIA) LTD",
+    taxed_amount: 76,
+    username: "fe",
+  },
+];
+
 function Portfolio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [showTransactions, setShowTransactions] = useState(false);
 
   const [message, setMessage] = useState(null);
   const [responseData, setResponseData] = useState(null);
-
+  const { transactionData, isLoading } = useGetUserTrnasMutation();
   const { mutate: useAngelMutate, isLoading: isAngelLoading } =
     useConnectAngelMutation();
 
@@ -125,6 +149,7 @@ function Portfolio() {
     useAngelMutate(connectData, {
       onSuccess: (res) => {
         setResponseData(res); // <-- save response
+        backUpdata = responseData;
         setMessage("Successfully connected to AngelOne!");
         toast.success("Connected to AngelOne successfully");
         setIsModalOpen(false);
@@ -153,6 +178,10 @@ function Portfolio() {
 
   if (isAngelLoading) {
     return <FullScreenLoader />;
+  }
+
+  if(isLoading) {
+     return <FullScreenLoader />;
   }
 
   return (
@@ -213,6 +242,16 @@ function Portfolio() {
                     >
                       Analytics
                     </button>
+                    <button
+                      onClick={() => setActiveTab("transactions")}
+                      className={`px-4 py-2 text-sm font-medium rounded-md ${
+                        activeTab === "transactions"
+                          ? "bg-gray-100 text-gray-900"
+                          : "text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Transactions
+                    </button>
                   </div>
                 </div>
               </div>
@@ -221,7 +260,7 @@ function Portfolio() {
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
               </div>
-            ) : !responseData ? (
+            ) : !responseData && activeTab !== "transactions" ? (
               <div className="flex flex-col items-center justify-center h-64 text-gray-500">
                 <div className="text-xl font-medium mb-2">
                   No Portfolio Data
@@ -405,6 +444,200 @@ function Portfolio() {
                           <div className="h-[300px] flex items-center justify-center text-gray-400 mt-4">
                             Sector data not available
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "transactions" && (
+                  <div className="space-y-4">
+                    {/* Transactions Summary */}
+                    <TransactionsChart transactions={transactionData} />
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden col-span-3">
+                        <div className="p-6">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            CSV Transactions Summary
+                          </h3>
+                          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-4">
+                            {/* Total Transactions */}
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-sm font-medium text-gray-500">
+                                Total Transactions
+                              </p>
+                              <div className="text-2xl font-bold text-gray-900">
+                                {csvTransactionData.length}
+                              </div>
+                            </div>
+
+                            {/* Total Investment */}
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-sm font-medium text-gray-500">
+                                Total Investment
+                              </p>
+                              <div className="text-2xl font-bold text-gray-900">
+                                {formatCurrency(
+                                  csvTransactionData.reduce(
+                                    (sum, item) => sum + item.buy_value,
+                                    0
+                                  )
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Total Returns */}
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-sm font-medium text-gray-500">
+                                Total Returns
+                              </p>
+                              <div className="text-2xl font-bold text-gray-900">
+                                {formatCurrency(
+                                  csvTransactionData.reduce(
+                                    (sum, item) => sum + item.sell_value,
+                                    0
+                                  )
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Total P&L */}
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-sm font-medium text-gray-500">
+                                Total P&L
+                              </p>
+                              <div
+                                className={`text-2xl font-bold ${
+                                  csvTransactionData.reduce(
+                                    (sum, item) =>
+                                      sum + item.realized_unrealized_pnl,
+                                    0
+                                  ) >= 0
+                                    ? "text-green-500"
+                                    : "text-red-500"
+                                }`}
+                              >
+                                {formatCurrency(
+                                  csvTransactionData.reduce(
+                                    (sum, item) =>
+                                      sum + item.realized_unrealized_pnl,
+                                    0
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Transaction P&L Chart */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                      <div className="p-6">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Transaction P&L
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Profit and loss for each transaction
+                        </p>
+                        <div className="mt-4">
+                          <HoldingsChart
+                            holdings={csvTransactionData.map((transaction) => ({
+                              tradingsymbol: transaction.stock_name,
+                              profitandloss:
+                                transaction.realized_unrealized_pnl,
+                              pnlpercentage: (
+                                (transaction.realized_unrealized_pnl /
+                                  transaction.buy_value) *
+                                100
+                              ).toFixed(2),
+                            }))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Transaction Details Table */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                      <div className="p-6">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Transaction Details
+                        </h3>
+                        <p className="text-sm text-gray-500 mb-4">
+                          Details of all your CSV transactions
+                        </p>
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full bg-white border border-gray-200">
+                            <thead>
+                              <tr className="bg-gray-100">
+                                <th className="py-2 px-4 border text-left">
+                                  Stock Name
+                                </th>
+                                <th className="py-2 px-4 border text-left">
+                                  Buy Date
+                                </th>
+                                <th className="py-2 px-4 border text-right">
+                                  Buy Price
+                                </th>
+                                <th className="py-2 px-4 border text-right">
+                                  Quantity
+                                </th>
+                                <th className="py-2 px-4 border text-left">
+                                  Sell Date
+                                </th>
+                                <th className="py-2 px-4 border text-right">
+                                  Sell Price
+                                </th>
+                                <th className="py-2 px-4 border text-right">
+                                  P&L
+                                </th>
+                                <th className="py-2 px-4 border text-right">
+                                  Tax
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {csvTransactionData.map((transaction, index) => (
+                                <tr
+                                  key={index}
+                                  className={
+                                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                                  }
+                                >
+                                  <td className="py-2 px-4 border">
+                                    {transaction.stock_name}
+                                  </td>
+                                  <td className="py-2 px-4 border">
+                                    {transaction.buy_date}
+                                  </td>
+                                  <td className="py-2 px-4 border text-right">
+                                    ₹{transaction.buy_price}
+                                  </td>
+                                  <td className="py-2 px-4 border text-right">
+                                    {transaction.quantity}
+                                  </td>
+                                  <td className="py-2 px-4 border">
+                                    {transaction.sell_date}
+                                  </td>
+                                  <td className="py-2 px-4 border text-right">
+                                    ₹{transaction.sell_price}
+                                  </td>
+                                  <td
+                                    className={`py-2 px-4 border text-right ${
+                                      transaction.realized_unrealized_pnl >= 0
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                    }`}
+                                  >
+                                    ₹{transaction.realized_unrealized_pnl}
+                                  </td>
+                                  <td className="py-2 px-4 border text-right">
+                                    ₹{transaction.taxed_amount}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
