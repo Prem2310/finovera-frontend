@@ -73,7 +73,7 @@ function AppLayout() {
               </Link>
             ))}
           </div>
-          <div onClick={() => navigate("/settings")}>
+          <div onClick={() => navigate("/profile")}>
             {/* <UserButton /> */}
             <div>
               <span className="p-2 rounded-full bg-slate-900 w-12 h-12 ">AC</span>

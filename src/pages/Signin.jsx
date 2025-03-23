@@ -26,8 +26,6 @@ const Signin = () => {
 
     if (!formData.username) {
       newErrors.username = { message: "username is required" };
-    } else if (!/\S+@\S+\.\S+/.test(formData.username)) {
-      newErrors.username = { message: "username is invalid" };
     }
 
     if (!formData.password) {
