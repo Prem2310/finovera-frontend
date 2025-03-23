@@ -23,6 +23,7 @@ import Support from "./pages/Support";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { setNavigate } from "./api/axiosInstance";
 import { Toaster } from "react-hot-toast";
+import Profile from "./pages/Profile";
 
 
 const query = new QueryClient({
