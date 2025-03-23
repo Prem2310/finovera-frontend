@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardCard from "../components/ui/DashboardCard";
 import {
     HiBanknotes,
@@ -24,6 +24,73 @@ function Dashboard() {
     const [showInsightsModal, setShowInsightsModal] = useState(false); // Add this state
     const { mutate: llmMutation, isLoading: isLLMLoading } = useGetLLMMutation();
     const { mutateAsync: llmMutateAsync } = useGetLLMMutation();
+
+    const [recommendationData, setRecommendationData] = useState({
+        "recommendations": [
+            {
+                "stockname": "steel authority of india limited",
+                "symbol": "SAIL",
+                "sector": "Technology",
+                "volatility": "37.87%",
+                "beta": "1.81"
+            },
+            {
+                "stockname": "hfcl limited",
+                "symbol": "HFCL",
+                "sector": "Technology",
+                "volatility": "46.64%",
+                "beta": "1.64"
+            },
+            {
+                "stockname": "trigyn technologies limited",
+                "symbol": "TRIGYN",
+                "sector": "Technology",
+                "volatility": "47.45%",
+                "beta": "1.65"
+            },
+            {
+                "stockname": "rashi peripherals limited",
+                "symbol": "RPTECH",
+                "sector": "Technology",
+                "volatility": "51.31%",
+                "beta": "1.57"
+            }
+        ],
+        "stats": {
+            "total_stocks": 4,
+            "avg_volatility": "45.82%",
+            "avg_beta": "1.67"
+        },
+        "explanation": "The recommended technology stocks aim to balance the user's short-term wealth creation goal with moderate risk tolerance, despite their limited experience.  While short-term investing in individual stocks is inherently riskier, these selections within the user's preferred technology sector offer potential for quicker gains compared to more conservative options.  However, the inherent volatility necessitates close monitoring."
+    });
+
+    useEffect(() => {
+        // getRecommendation();
+    }, []);
+
+    const getRecommendation = async () => {
+        const accessToken = localStorage.getItem("access_token");
+
+        const requestData = {
+            access_token: accessToken,
+        };
+
+        await fetch("http://localhost:8000/" + "recommend/recommend_stocks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setRecommendationData(data);
+                console.log("\n\n data", data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
 
     const handleSummarize = () => {
         const accessToken = localStorage.getItem("access_token");
@@ -90,7 +157,7 @@ function Dashboard() {
             </div>
 
             <p className="py-2 font-medium">Your personalized picks</p>
-            <RecommendedStockCard
+            {/* <RecommendedStockCard
                 stockName="Apple Inc."
                 stockSymbol="AAPL"
                 price="178.72"
@@ -98,7 +165,23 @@ function Dashboard() {
                 percentageChange="2.43"
                 trend="up"
                 recommendation="buy"
-            />
+            /> */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+
+                {
+                    recommendationData && recommendationData.recommendations && recommendationData.recommendations.map((stock, index) => {
+                        return (
+                            <RecommendedStockCard
+                                key={index}
+                                stockName={stock.stockname}
+                                stockSymbol={stock.symbol}
+                                sector={stock.sector}
+                                volatility={stock.volatility}
+                            />
+                        );
+                    })
+                }
+            </div>
             <p className="py-4">Transaction table</p>
             <StockPortfolioTable data={transactionData} />
             {showInsightsModal && (
