@@ -34,22 +34,22 @@ The finovera Dashboard is an intelligent, comprehensive solution for retail inve
 
 Below are descriptions of key dashboard pages based on the presentation slides. (In a real README, these would be replaced with actual image files.)
 
-1. **Dashboard Overview**
+1. **Dashboard Overview**<br>
    <img src="./Screens/1.jpeg" alt="Logo" width="200" height="80">
 
 2. <b>Portfolio page</b> <br>
    <img src="./Screens/2.jpeg" alt="Logo" width="200" height="80">
 
-3. **Candle stick graph**
+3. **Candle stick graph**<br>
    <img src="./Screens/3.jpeg" alt="Logo" width="200" height="80">
 
-4. **Real data plotting**
+4. **Real data plotting**<br>
    <img src="./Screens/4.jpeg" alt="Logo" width="200" height="80">
 
-5. **SEBI rules and regulations**
+5. **SEBI rules and regulations**<br>
    <img src="./Screens/5.jpeg" alt="Logo" width="200" height="80">
 
-6. **Simple explaination by AI**
+6. **Simple explaination by AI**<br>
    <img src="./Screens/6.jpeg" alt="Logo" width="200" height="80">
 
 7. **Personalised Insights for user according to onboarding form**<br>
@@ -57,6 +57,6 @@ Below are descriptions of key dashboard pages based on the presentation slides. 
 
 
 # EXTRA FEATURES
-8. **Implementation Of recommendation moelw**
+8. **Implementation Of recommendation model**<br>
    <img src="./Screens/8.jpeg" alt="Logo" width="200" height="80">
 ## Installation
