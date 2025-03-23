@@ -32,7 +32,7 @@ const PreferenceForm = () => {
       risk_tolerance: data.riskTolerance,
       investment_exp_years: Number(data.yearsExperience),
       income: Number(data.monthlyIncome),
-      percent_income_to_invest: data.stockPercentage,
+      percent_income_to_invest: Number(data.stockPercentage),
       preferable_sector: data.sectors,
       access_token: localStorage.getItem("access_token"),
     };
@@ -94,7 +94,7 @@ const PreferenceForm = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Controller
-          name="nameOfPortfolio"
+          name="portfolio_name"
           control={control}
           render={({ field }) => (
             <FormInput
@@ -108,7 +108,7 @@ const PreferenceForm = () => {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Controller
-            name="investmentGoal"
+            name="primary_goal"
             control={control}
             render={({ field }) => (
               <FormInput
@@ -122,7 +122,7 @@ const PreferenceForm = () => {
           />
 
           <Controller
-            name="investmentHorizon"
+            name="investment_horizon"
             control={control}
             render={({ field }) => (
               <FormInput
@@ -160,7 +160,7 @@ const PreferenceForm = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Controller
-            name="yearsExperience"
+            name="investment_exp_years"
             control={control}
             render={({ field }) => (
               <FormInput
@@ -175,7 +175,7 @@ const PreferenceForm = () => {
           />
 
           <Controller
-            name="monthlyIncome"
+            name="income"
             control={control}
             render={({ field }) => (
               <FormInput
@@ -192,7 +192,7 @@ const PreferenceForm = () => {
         </div>
 
         <Controller
-          name="stockPercentage"
+          name="percent_income_to_invest"
           control={control}
           render={({ field }) => (
             <div>

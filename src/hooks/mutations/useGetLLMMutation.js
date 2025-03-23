@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 export const useGetLLMMutation = () => {
   return useMutation({
     mutationFn: async (data) => {
-      await apiGetLLMSummarize(data);
+      // Return the response from the API call
+      return await apiGetLLMSummarize(data);
     },
     onSuccess: () => {
       toast.success("LLM Summarized Successfully");

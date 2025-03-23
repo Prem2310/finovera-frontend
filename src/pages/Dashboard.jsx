@@ -16,7 +16,7 @@ import { useGetUserTrnasMutation } from "../hooks/mutations/useGetUserTrnasMutat
 import UploadCSV from "../components/UploadXls";
 // import DataTable from "../components/DataTable";
 function Dashboard() {
-  const {transactionData, isLoading, isError} = useGetUserTrnasMutation();
+  const { transactionData, isLoading, isError } = useGetUserTrnasMutation();
   return (
     <div>
       <div className="flex justify-between">
@@ -29,9 +29,7 @@ function Dashboard() {
           >
             Portfolio insights
           </Button>
-        
-             <UploadCSV />
-        
+          <UploadCSV />
         </div>
       </div>
       {/* dashboard card */}
