@@ -31,63 +31,60 @@ const Chat = () => {
     inputRef.current?.focus();
   }, []);
 
- const handleSendMessage = async (e) => {
-   e.preventDefault();
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
 
-   if (!inputValue.trim()) return;
+    if (!inputValue.trim()) return;
 
-   // Add user message
-   const userMessage = {
-     id: messages.length + 1,
-     text: inputValue,
-     isBot: false,
-   };
+    // Add user message
+    const userMessage = {
+      id: messages.length + 1,
+      text: inputValue,
+      isBot: false,
+    };
 
-   setMessages((prev) => [...prev, userMessage]);
-   setInputValue("");
-   setIsTyping(true);
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
+    setIsTyping(true);
 
-   toast.loading("Processing your request...");
+    toast.loading("Processing your request...");
 
-   try {
-     const response = await chatbotMutation({
-       question: inputValue,
-     });
+    try {
+      const response = await chatbotMutation({
+        question: inputValue,
+      });
 
-     // Extract bot's message from response
-     const botMessageText =
-       response?.response || "Sorry, I didn't understand that.";
+      // Extract bot's message from response
+      const botMessageText =
+        response?.response || "Sorry, I didn't understand that.";
 
-     const botMessage = {
-       id: messages.length + 2,
-       text: botMessageText,
-       isBot: true,
-     };
+      const botMessage = {
+        id: messages.length + 2,
+        text: botMessageText,
+        isBot: true,
+      };
 
-     setMessages((prev) => [...prev, botMessage]);
-   } catch (error) {
-     const errorMessage =
-       error?.response?.data?.message || "An error occurred.";
-     setMessages((prev) => [
-       ...prev,
-       {
-         id: messages.length + 2,
-         text: errorMessage,
-         isBot: true,
-         isError: true,
-       },
-     ]);
-   } finally {
-     setIsTyping(false);
-     toast.dismiss(); // Remove loading toast
-   }
- };
-
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message || "An error occurred.";
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: messages.length + 2,
+          text: errorMessage,
+          isBot: true,
+          isError: true,
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+      toast.dismiss(); // Remove loading toast
+    }
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col text-zinc-900 dark:text-zinc-50">
-  
-
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto space-y-4">
