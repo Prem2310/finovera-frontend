@@ -1,10 +1,19 @@
+Below is the Markdown (.md) file content based on the updated README you requested. You can copy this into a file named README.md for your project.
+
+markdown
+
+Collapse
+
+Wrap
+
+Copy
 # Finovera
 
-Welcome to the **Finovera**, a financial management platform designed to empower retail investors with AI-driven insights, real-time data, and user-friendly tools. Developed by **Team Bright-Hive**, this project leverages advanced AI capabilities (Gemini LLM) to simplify investment, enhance portfolio management, and promote financial literacy.
+Welcome to **Finovera**, a financial management platform designed to empower retail investors with AI-driven insights, real-time data, and user-friendly tools. Developed by **Team Bright-Hive**, this project leverages advanced AI capabilities (Gemini LLM) to simplify investment, enhance portfolio management, and promote financial literacy.
 
 ## Project Overview
 
-The finovera Dashboard is an intelligent, comprehensive solution for retail investors. It integrates real-time financial data, personalized recommendations, secure portfolio tracking, and simplified regulatory insights into a single platform. Whether you're a beginner or an experienced investor, this dashboard provides the tools you need to make informed decisions and manage your investments effectively.
+The Finovera Dashboard is an intelligent, comprehensive solution for retail investors. It integrates real-time financial data, personalized recommendations, secure portfolio tracking, and simplified regulatory insights into a single platform. Whether you're a beginner or an experienced investor, this dashboard provides the tools you need to make informed decisions and manage your investments effectively.
 
 ## Key Features
 
@@ -34,29 +43,28 @@ The finovera Dashboard is an intelligent, comprehensive solution for retail inve
 
 Below are descriptions of key dashboard pages based on the presentation slides. (In a real README, these would be replaced with actual image files.)
 
-1. **Dashboard Overview**<br>
-   <img src="./Screens/1.jpeg" alt="Logo" width="200" height="80">
+1. **Dashboard Overview**  
+   ![Dashboard Overview](./Screens/1.jpeg)
 
-2. <b>Portfolio page</b> <br>
-   <img src="./Screens/2.jpeg" alt="Logo" width="200" height="80">
+2. **Portfolio Page**  
+   ![Portfolio Page](./Screens/2.jpeg)
 
-3. **Candle stick graph**<br>
-   <img src="./Screens/3.jpeg" alt="Logo" width="200" height="80">
+3. **Candlestick Graph**  
+   ![Candlestick Graph](./Screens/3.jpeg)
 
-4. **Real data plotting**<br>
-   <img src="./Screens/4.jpeg" alt="Logo" width="200" height="80">
+4. **Real Data Plotting**  
+   ![Real Data Plotting](./Screens/4.jpeg)
 
-5. **SEBI rules and regulations**<br>
-   <img src="./Screens/5.jpeg" alt="Logo" width="200" height="80">
+5. **SEBI Rules and Regulations**  
+   ![SEBI Rules and Regulations](./Screens/5.jpeg)
 
-6. **Simple explaination by AI**<br>
-   <img src="./Screens/6.jpeg" alt="Logo" width="200" height="80">
+6. **Simple Explanation by AI**  
+   ![AI Explanation](./Screens/6.jpeg)
 
-7. **Personalised Insights for user according to onboarding form**<br>
-   <img src="./Screens/7.jpeg" alt="Logo" width="200" height="80">
+7. **Personalized Insights for User According to Onboarding Form**  
+   ![Personalized Insights](./Screens/7.jpeg)
 
+## Extra Features
 
-# EXTRA FEATURES
-8. **Implementation Of recommendation model**<br>
-   <img src="./Screens/8.jpeg" alt="Logo" width="200" height="80">
-## Installation
+8. **Implementation of Recommendation Model**  
+   ![Recommendation Model](./Screens/8.jpeg)
