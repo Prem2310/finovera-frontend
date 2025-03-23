@@ -28,6 +28,7 @@ const StockChart = ({ instrumentKey, stockName }) => {
         `https://api.upstox.com/v2/historical-candle/NSE_EQ|${instrumentKey}/1minute/${toDate}/${fromDateFormatted}`
       );
       const result = await response.json();
+      console.log(result);
 
       if (result.status === "success") {
         if (chartType === "candle") {

@@ -40,7 +40,7 @@ export default function HoldingsChart({ holdings }) {
           <div
             className={data.percentage >= 0 ? "text-green-500" : "text-red-500"}
           >
-            {data?.percentage.toFixed(2)}%
+            {data?.percentage}%
           </div>
         </div>
       );

@@ -17,7 +17,6 @@ import UploadCSV from "../components/UploadXls";
 import { useGetLLMMutation } from "../hooks/mutations/useGetLLMMutation";
 import PortfolioInsights from "../components/PortfolioInsights"; // Adjust the path if needed
 
-// import DataTable from "../components/DataTable";
 function Dashboard() {
     const { transactionData, isLoading, isError } = useGetUserTrnasMutation();
     const [summaryData, setSummaryData] = useState(null);
@@ -93,19 +92,8 @@ function Dashboard() {
     }
 
     const handleSummarize = () => {
-        const accessToken = localStorage.getItem("access_token");
-
-        const requestData = {
-            access_token: accessToken,
-        };
-
-        llmMutation(requestData, {
-            onSuccess: (data) => {
-                console.log("LLM summary data:", data);
-                setSummaryData(data.message.summarize_llm); // Access the correct property
-                setShowInsightsModal(true);
-            },
-        });
+        // Simply show the modal - the component will handle data fetching
+        setShowInsightsModal(true);
     };
 
     return (
@@ -114,10 +102,10 @@ function Dashboard() {
                 <PageHeading>Dashboard</PageHeading>
                 <div className="flex gap-4">
                     <Button
-                        onClick={handleSummarize} // Use handleSummarizeAsync if you prefer that approach
+                        onClick={handleSummarize}
                         icon={<HiSparkles />}
                         type="primary"
-                        className=" tracking-wide"
+                        className="tracking-wide"
                     >
                         Portfolio insights
                     </Button>

@@ -557,7 +557,7 @@ function Portfolio() {
                     </div>
 
                     {/* Transaction Details Table */}
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    {/* <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                       <div className="p-6">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Transaction Details
@@ -639,7 +639,7 @@ function Portfolio() {
                           </table>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </>
