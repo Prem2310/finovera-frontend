@@ -17,29 +17,14 @@ import UploadCSV from "../components/UploadXls";
 import { useGetLLMMutation } from "../hooks/mutations/useGetLLMMutation";
 import PortfolioInsights from "../components/PortfolioInsights"; // Adjust the path if needed
 
-// import DataTable from "../components/DataTable";
 function Dashboard() {
   const { transactionData, isLoading, isError } = useGetUserTrnasMutation();
-  const [summaryData, setSummaryData] = useState(null);
-  const [showInsightsModal, setShowInsightsModal] = useState(false); // Add this state
-  const { mutate: llmMutation, isLoading: isLLMLoading } = useGetLLMMutation();
-  const { mutateAsync: llmMutateAsync } = useGetLLMMutation();
+  const [showInsightsModal, setShowInsightsModal] = useState(false);
 
-const handleSummarize = () => {
-  const accessToken = localStorage.getItem("access_token");
-
-  const requestData = {
-    access_token: accessToken,
+  const handleSummarize = () => {
+    // Simply show the modal - the component will handle data fetching
+    setShowInsightsModal(true);
   };
-
-  llmMutation(requestData, {
-    onSuccess: (data) => {
-      console.log("LLM summary data:", data);
-      setSummaryData(data.summarize_llm); // Access the correct property
-      setShowInsightsModal(true);
-    },
-  });
-};
 
   return (
     <div>
@@ -47,10 +32,10 @@ const handleSummarize = () => {
         <PageHeading>Dashboard</PageHeading>
         <div className="flex gap-4">
           <Button
-            onClick={handleSummarize} // Use handleSummarizeAsync if you prefer that approach
+            onClick={handleSummarize}
             icon={<HiSparkles />}
             type="primary"
-            className=" tracking-wide"
+            className="tracking-wide"
           >
             Portfolio insights
           </Button>
@@ -101,11 +86,10 @@ const handleSummarize = () => {
       />
       <p className="py-4">Transaction table</p>
       <StockPortfolioTable data={transactionData} />
+
+      {/* Fixed modal rendering with loading state */}
       {showInsightsModal && (
-        <PortfolioInsights
-          insightsData={summaryData}
-          onClose={() => setShowInsightsModal(false)}
-        />
+        <PortfolioInsights onClose={() => setShowInsightsModal(false)} />
       )}
     </div>
   );
