@@ -69,7 +69,7 @@ const Signin = () => {
             <FormInput
               name="username"
               label="Enter username"
-              type="username"
+              type="text"
               register={register}
               errors={errors}
               placeholder="ABC_123"
