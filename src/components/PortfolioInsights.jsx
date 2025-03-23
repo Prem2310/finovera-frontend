@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   HiTrendingDown,
   HiTrendingUp,
@@ -10,10 +10,8 @@ import {
 } from "react-icons/hi";
 import { HiArrowsRightLeft, HiMiniChartBar } from "react-icons/hi2";
 
-const PortfolioInsights = ({ insightsData }) => {
-  const [showModal, setShowModal] = useState(true);
-
-  // Use the provided data or mock data for development
+const PortfolioInsights = ({ insightsData, onClose }) => {
+  // Check if data exists with fallback to sample data
   const data = insightsData || {
     total_invested_value: 1034881.47,
     current_value: 7020.0,
@@ -24,8 +22,9 @@ const PortfolioInsights = ({ insightsData }) => {
 
   // Parse the markdown content into sections
   const sections = data.insights_and_recommendations
-    .split("##")
-    .filter(Boolean);
+    ?.split("##")
+    .filter(Boolean)
+    .map((section) => section.trim());
 
   // Format currency values
   const formatCurrency = (value) => {
@@ -38,26 +37,36 @@ const PortfolioInsights = ({ insightsData }) => {
 
   // Extract action items from recommendations section
   const getActionItems = () => {
-    const recommendationsSection = sections.find((section) =>
-      section.trim().startsWith("Recommendations")
+    const recommendationsSection = sections?.find((section) =>
+      section.startsWith("Recommendations")
     );
     if (!recommendationsSection) return [];
 
-    // Extract bullet points
+    // Extract bullet points for "Immediate Actions"
+    const immediateActionsMatch = recommendationsSection.match(
+      /\*\*1\. Immediate Actions:\*\*([\s\S]*?)(?=\*\*2\.)/
+    );
+
+    if (!immediateActionsMatch || !immediateActionsMatch[1]) return [];
+
+    const actionItemsText = immediateActionsMatch[1];
     const actionItems =
-      recommendationsSection.match(/\*\*[^:]*:\*\*[^*]*/g) || [];
+      actionItemsText.match(/\*\s+\*\*([^:]+):\*\*([^\*]+)/g) || [];
+
     return actionItems
       .map((item) => {
-        const [title, description] = item.split(":**");
-        return {
-          title: title.replace("**", "").trim(),
-          description: description.trim(),
-        };
+        const parts = item.match(/\*\s+\*\*([^:]+):\*\*([^\*]+)/);
+        if (parts && parts.length >= 3) {
+          return {
+            title: parts[1].trim(),
+            description: parts[2].trim(),
+          };
+        }
+        return null;
       })
+      .filter(Boolean)
       .slice(0, 3); // Limited to first 3 action items
   };
-
-  if (!showModal) return null;
 
   return (
     <div className="fixed inset-0 bg-white backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -68,7 +77,7 @@ const PortfolioInsights = ({ insightsData }) => {
             Portfolio Analysis & Insights
           </h2>
           <button
-            onClick={() => setShowModal(false)}
+            onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100"
           >
             <HiX className="w-5 h-5 text-gray-500" />
@@ -153,7 +162,7 @@ const PortfolioInsights = ({ insightsData }) => {
               Portfolio Summary
             </h3>
             <div className="prose prose-sm max-w-none text-gray-600">
-              {sections[0] && (
+              {sections && sections.length > 0 && (
                 <p>{sections[0].replace("Summary", "").trim()}</p>
               )}
             </div>
@@ -166,7 +175,7 @@ const PortfolioInsights = ({ insightsData }) => {
               Key Insights
             </h3>
             <div className="prose prose-sm max-w-none">
-              {sections[1] && (
+              {sections && sections.length > 1 && (
                 <ul className="space-y-2 text-gray-600">
                   {sections[1]
                     .replace("Insights", "")
@@ -207,7 +216,7 @@ const PortfolioInsights = ({ insightsData }) => {
 
         <div className="border-t border-gray-200 p-4 flex justify-end bg-gray-50">
           <button
-            onClick={() => setShowModal(false)}
+            onClick={onClose}
             className="px-4 py-2 bg-slate-600 text-white rounded hover:bg-slate-700 font-medium"
           >
             Close Insights
