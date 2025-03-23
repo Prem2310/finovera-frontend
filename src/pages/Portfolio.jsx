@@ -103,7 +103,6 @@ const mockData = {
   },
 };
 
-
 function Portfolio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
@@ -120,6 +119,7 @@ function Portfolio() {
       mpin: formData.mpin,
       api_key: formData.api_key,
       totp_secret: formData.totp_secret,
+      access_token: localStorage.getItem("access_token"),
     };
 
     useAngelMutate(connectData, {

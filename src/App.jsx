@@ -61,7 +61,7 @@ const AppWithNavigation = () => {
         <Route path="/transactions" element={<Transaction />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/preference-form" element={<PreferenceForm />} />
-        <Route path="/support" element={<Support />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
