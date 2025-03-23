@@ -10,7 +10,7 @@ import {
 export default function StockPortfolioTable({ data }) {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Number of items to show per page
+  const itemsPerPage = 10;
 
   // Early return with placeholder if no data
   if (!data || data.length === 0) {
@@ -59,8 +59,25 @@ export default function StockPortfolioTable({ data }) {
   const calculatePnLPercentage = (stock) => {
     if (!stock.buy_price) return 0;
     const pnl = stock.realized_unrealized_pnl;
-    const investment = stock.buy_value;
+    const investment = stock.buy_value || stock.buy_price * stock.quantity;
     return (pnl / investment) * 100;
+  };
+
+  // Calculate tax amount (fallback if taxed_amount is not provided)
+  const calculateTax = (stock) => {
+    if (stock.taxed_amount !== undefined) {
+      return stock.taxed_amount; // Use pre-calculated tax if available
+    }
+
+    const pnl = stock.realized_unrealized_pnl;
+    if (pnl <= 0) return 0; // No tax on losses
+
+    const buyDate = new Date(stock.buy_date);
+    const endDate = stock.sell_date ? new Date(stock.sell_date) : new Date();
+    const holdingDays = (endDate - buyDate) / (1000 * 60 * 60 * 24);
+    const taxRate = holdingDays >= 365 ? 0.125 : 0.2; // 12.5% long-term, 20% short-term
+
+    return pnl * taxRate;
   };
 
   // Component for Status Chip
@@ -69,7 +86,6 @@ export default function StockPortfolioTable({ data }) {
     let colorClasses;
     let status;
 
-    // Determine status based on sell_price and sell_date
     if (!stock.sell_price || !stock.sell_date) {
       status = "holding";
       colorClasses = "bg-blue-100 text-blue-800";
@@ -126,7 +142,6 @@ export default function StockPortfolioTable({ data }) {
                 <HiChevronLeft className="h-5 w-5" aria-hidden="true" />
               </button>
 
-              {/* Page numbers */}
               {[...Array(totalPages).keys()].map((number) => (
                 <button
                   key={number + 1}
@@ -219,6 +234,12 @@ export default function StockPortfolioTable({ data }) {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Tax
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -282,6 +303,9 @@ export default function StockPortfolioTable({ data }) {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatCurrency(calculateTax(stock))}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center space-x-2">
                       <button className="text-blue-600 hover:text-blue-800">
                         More Details
@@ -298,7 +322,7 @@ export default function StockPortfolioTable({ data }) {
             ) : (
               <tr>
                 <td
-                  colSpan="9"
+                  colSpan="10" // Updated to 10 due to new Tax column
                   className="px-6 py-4 text-center text-sm text-gray-500"
                 >
                   No data available
@@ -307,7 +331,6 @@ export default function StockPortfolioTable({ data }) {
             )}
           </tbody>
         </table>
-        {/* Pagination controls */}
         {data.length > itemsPerPage && <Pagination />}
       </div>
     </div>
