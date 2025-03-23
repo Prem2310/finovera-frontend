@@ -1,6 +1,6 @@
 function PageHeading({ children }) {
   return (
-    <h1 className="mb-4 hidden text-xl font-semibold capitalize lg:block">
+    <h1 className="mb-4 hidden text-2xl font-semibold capitalize lg:block">
       {children}
     </h1>
   );

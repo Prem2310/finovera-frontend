@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("auth_token");
+  const token = localStorage.getItem("access_token");
   const location = useLocation();
 
   if (!token) {

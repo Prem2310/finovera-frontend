@@ -56,8 +56,8 @@ const AppWithNavigation = () => {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="/taxes" element={<Analytics />} />
-        <Route path="/portfolios" element={<Portfolio />} />
         <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/portfolios" element={<Portfolio />} />
         <Route path="/transactions" element={<Transaction />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/preference-form" element={<PreferenceForm />} />

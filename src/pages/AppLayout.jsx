@@ -35,16 +35,15 @@ function AppLayout() {
 
   const navItems = [
     { path: "/dashboard", icon: HiOutlineRectangleGroup, label: "Dashboard" },
-    { path: "/taxes", icon: HiOutlineReceiptPercent, label: "Tax" },
     { path: "/portfolios", icon: HiOutlineBriefcase, label: "Portfolios" },
     { path: "/watchlist", icon: HiOutlineRectangleStack, label: "Watchlist" },
+    { path: "/taxes", icon: HiOutlineReceiptPercent, label: "Tax" },
     {
       path: "/transactions",
       icon: HiOutlineArrowsRightLeft,
       label: "Transaction History",
     },
     { path: "/chat", icon: HiOutlineChatBubbleLeftRight, label: "Finbot" },
-    { path: "/support", icon: HiOutlineLifebuoy, label: "Learning center" },
   ];
 
   return (
