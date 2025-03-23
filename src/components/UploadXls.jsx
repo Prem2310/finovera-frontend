@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Button from "./Button";
 
 const UploadCSV = () => {
   const [file, setFile] = useState(null);
@@ -47,12 +48,14 @@ const UploadCSV = () => {
   return (
     <div className="flex flex-col items-center p-4">
       <input type="file" onChange={handleFileChange} className="mb-2" />
-      <button
+      <Button
+        type="primary"
+        btnType="submit"
         onClick={handleUpload}
         className="bg-blue-500 text-white p-2 rounded"
       >
         Upload File
-      </button>
+      </Button>
     </div>
   );
 };

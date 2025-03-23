@@ -29,10 +29,9 @@ function Dashboard() {
           >
             Portfolio insights
           </Button>
-          <Button type="outline" icon={<HiPlus />}>
-            Add transaction
-          </Button>
-          <UploadCSV/>
+        
+             <UploadCSV />
+        
         </div>
       </div>
       {/* dashboard card */}

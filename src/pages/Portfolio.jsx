@@ -149,7 +149,6 @@ function Portfolio() {
     useAngelMutate(connectData, {
       onSuccess: (res) => {
         setResponseData(res); // <-- save response
-        backUpdata = responseData;
         setMessage("Successfully connected to AngelOne!");
         toast.success("Connected to AngelOne successfully");
         setIsModalOpen(false);
