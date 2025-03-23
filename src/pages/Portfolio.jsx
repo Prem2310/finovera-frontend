@@ -149,7 +149,7 @@ function Portfolio() {
     }).format(value);
   };
 
-  const { holdings, totalholding } = mockData ;
+  const { holdings, totalholding } = responseData?.data || mockData.data;
 
   if (isAngelLoading) {
     return <FullScreenLoader />;

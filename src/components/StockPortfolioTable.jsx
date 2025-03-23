@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { HiOutlineEllipsisHorizontal } from "react-icons/hi2";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useGetUserTrnasMutation } from "../hooks/mutations/useGetUserTrnasMutation";
 
 const StockPortfolioTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeRow, setActiveRow] = useState(null);
   const pageSize = 8;
+  const { transactionData, isLoading } = useGetUserTrnasMutation();
+  console.log(transactionData);
 
   const rows = [
     {

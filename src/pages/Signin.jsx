@@ -6,7 +6,7 @@ import { useLoginUser } from "../hooks/mutations/useUserboarding";
 const Signin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -24,10 +24,10 @@ const Signin = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.email) {
-      newErrors.email = { message: "Email is required" };
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = { message: "Email is invalid" };
+    if (!formData.username) {
+      newErrors.username = { message: "username is required" };
+    } else if (!/\S+@\S+\.\S+/.test(formData.username)) {
+      newErrors.username = { message: "username is invalid" };
     }
 
     if (!formData.password) {
@@ -69,12 +69,12 @@ const Signin = () => {
         <div className="p-6">
           <form onSubmit={handleSubmit}>
             <FormInput
-              name="email"
-              label="Email Address"
-              type="email"
+              name="username"
+              label="Enter username"
+              type="username"
               register={register}
               errors={errors}
-              placeholder="john@example.com"
+              placeholder="ABC_123"
             />
 
             <FormInput
@@ -86,7 +86,7 @@ const Signin = () => {
               placeholder="••••••••"
             />
 
-            <div className="flex items-center justify-between mb-6">
+            {/* <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <input
                   id="remember-me"
@@ -110,7 +110,7 @@ const Signin = () => {
                   Forgot password?
                 </a>
               </div>
-            </div>
+            </div> */}
 
             <button
               type="submit"

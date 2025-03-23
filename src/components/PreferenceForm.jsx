@@ -41,15 +41,9 @@ const PreferenceForm = () => {
 
   const investmentGoalOptions = [
     { value: "", label: "Select your goal" },
-    { value: "retirement", label: "Retirement" },
-    { value: "house", label: "Buying a House" },
-    { value: "wealth", label: "Wealth Growth" },
-    { value: "education", label: "Education" },
-    { value: "vacation", label: "Vacation" },
-    {
-      value: "marriage, kid education, health, house, financial independence",
-      label: "Other",
-    },
+    { value: "Growth", label: "Long term growth" },
+    { value: "Income", label: "More income" },
+    { value: "Preservation", label: "Preservation for other goals" },
   ];
 
   const investmentHorizonOptions = [
