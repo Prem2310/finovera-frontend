@@ -7,18 +7,28 @@ import {
   HiChevronRight,
 } from "react-icons/hi2";
 
-export default function StockPortfolioTable({ data }) {
+export default function StockPortfolioTable({ data, isLoading }) {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   // Early return with placeholder if no data
+  if (isLoading) {
+    return (
+      <div className="py-8 text-center text-gray-500">
+        <p className="font-medium">Loading...</p>
+      </div>
+    );
+  }
+
   if (!data || data.length === 0) {
     return (
       <div className="py-8 text-center text-gray-500">
         <p className="font-medium">No stock data available</p>
         <p className="text-sm">
-          Connect your account to view your portfolio details
+          {isCsvUploaded
+            ? "No transactions found in your portfolio"
+            : "Connect your account to view your portfolio details"}
         </p>
       </div>
     );

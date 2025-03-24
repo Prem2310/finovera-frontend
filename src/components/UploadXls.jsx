@@ -36,8 +36,9 @@ const UploadCSV = () => {
     formData.append("access_token", accessToken);
 
     try {
+      const apiBaseUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL;
       const response = await axios.post(
-        "http://0.0.0.0:8004/stocksCRUD/upload_csv",
+        `${apiBaseUrl}stocksCRUD/upload_csv`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -18,6 +18,7 @@ import {
   HiOutlineReceiptPercent,
   HiOutlineRectangleGroup,
   HiOutlineRectangleStack,
+  HiOutlineCog,
   HiOutlineUsers,
 } from "react-icons/hi2";
 import PathNavigation from "../components/ui/Pathnavigation";
@@ -38,11 +39,7 @@ function AppLayout() {
     { path: "/portfolios", icon: HiOutlineBriefcase, label: "Portfolios" },
     { path: "/watchlist", icon: HiOutlineRectangleStack, label: "Watchlist" },
     { path: "/taxes", icon: HiOutlineReceiptPercent, label: "Tax" },
-    {
-      path: "/transactions",
-      icon: HiOutlineArrowsRightLeft,
-      label: "Transaction History",
-    },
+    { path: "/prefernce", icon: HiOutlineCog, label: "User Preference" },
     { path: "/chat", icon: HiOutlineChatBubbleLeftRight, label: "Finbot" },
   ];
 
@@ -76,7 +73,9 @@ function AppLayout() {
           <div onClick={() => navigate("/profile")}>
             {/* <UserButton /> */}
             <div>
-              <span className="p-2 rounded-full bg-slate-900 w-12 h-12 ">AC</span>
+              <span className="p-2 rounded-full bg-slate-900 w-12 h-12 ">
+                AC
+              </span>
             </div>
           </div>
         </div>

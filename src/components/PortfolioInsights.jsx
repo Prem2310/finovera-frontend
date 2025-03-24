@@ -11,13 +11,26 @@ import {
 import { HiArrowsRightLeft, HiMiniChartBar } from "react-icons/hi2";
 
 const PortfolioInsights = ({ insightsData, onClose }) => {
-  // Check if data exists with fallback to sample data
-  const data = insightsData || {
+  // Extract summarize_llm from the nested JSON structure, with fallback
+  const data = insightsData?.message?.[0]?.summarize_llm || {
     total_invested_value: 1034881.47,
     current_value: 7020.0,
     total_profit_loss: -354316.86,
     total_pnl_percentage: -34.24,
     insights_and_recommendations: `## Summary\n\nThe portfolio "user1" has a Total Invested Value of $1,034,881.47, but its Current Value is significantly lower at $7,020.00. This results in a substantial Total Profit/Loss of $-354,316.86, representing a -34.24% decrease in value...`,
+  };
+
+  // Format currency values with fallback for NaN
+  const formatCurrency = (value) => {
+    const numValue = Number(value);
+    if (isNaN(numValue) || value === null || value === undefined) {
+      return "₹0.00"; // Fallback for invalid values
+    }
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2,
+    }).format(numValue);
   };
 
   // Parse the markdown content into sections
@@ -26,15 +39,6 @@ const PortfolioInsights = ({ insightsData, onClose }) => {
     .filter(Boolean)
     .map((section) => section.trim());
 
-  // Format currency values
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
-
   // Extract action items from recommendations section
   const getActionItems = () => {
     const recommendationsSection = sections?.find((section) =>
@@ -42,10 +46,13 @@ const PortfolioInsights = ({ insightsData, onClose }) => {
     );
     if (!recommendationsSection) return [];
 
-    // Extract bullet points for "Immediate Actions"
-    const immediateActionsMatch = recommendationsSection.match(
-      /\*\*1\. Immediate Actions:\*\*([\s\S]*?)(?=\*\*2\.)/
-    );
+    const immediateActionsMatch =
+      recommendationsSection.match(
+        /\*\*1\. Immediate Actions:\*\*([\s\S]*?)(?=\*\*2\.)/
+      ) ||
+      recommendationsSection.match(
+        /\*\*1\. Risk Reduction and Capital Preservation:\*\*([\s\S]*?)(?=\*\*2\.)/
+      ); // Adjusted for your data
 
     if (!immediateActionsMatch || !immediateActionsMatch[1]) return [];
 

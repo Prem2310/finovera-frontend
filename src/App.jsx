@@ -13,7 +13,6 @@ import React, { useEffect } from "react";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import PreferenceForm from "./components/PreferenceForm";
 import Analytics from "./pages/Analytics";
 import Portfolio from "./pages/Portfolio";
 import Watchlist from "./pages/Watchlist";
@@ -24,7 +23,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { setNavigate } from "./api/axiosInstance";
 import { Toaster } from "react-hot-toast";
 import Profile from "./pages/Profile";
-
+import Preference from "./pages/Preference";
 
 const query = new QueryClient({
   defaultOptions: {
@@ -61,7 +60,7 @@ const AppWithNavigation = () => {
         <Route path="/portfolios" element={<Portfolio />} />
         <Route path="/transactions" element={<Transaction />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/preference-form" element={<PreferenceForm />} />
+        <Route path="/prefernce" element={<Preference />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

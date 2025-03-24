@@ -20,29 +20,28 @@ const PreferenceForm = () => {
   const { mutate: setPreferenceMutate, isLoading } = useSetUserPrefMutation();
 
   // Watch values for UI updates
-  const watchRiskTolerance = watch("riskTolerance");
-  const watchSectors = watch("sectors");
-  const watchStockPercentage = watch("stockPercentage");
+  const watchRiskTolerance = watch("risk_tolerance");
+  const watchSectors = watch("preferable_sector");
+  const watchStockPercentage = watch("percent_income_to_invest");
 
   const onSubmit = (data) => {
     const newData = {
-      portfolio_name: data.nameOfPortfolio,
-      primary_goal: data.investmentGoal,
-      investment_horizon: data.investmentHorizon,
-      risk_tolerance: data.riskTolerance,
-      investment_exp_years: Number(data.yearsExperience),
-      income: Number(data.monthlyIncome),
-      percent_income_to_invest: Number(data.stockPercentage),
-      preferable_sector: data.sectors,
+      portfolio_name: data.portfolio_name,
+      primary_goal: data.primary_goal,
+      investment_horizon: data.investment_horizon,
+      risk_tolerance: data.risk_tolerance,
+      investment_exp_years: Number(data.investment_exp_years) || 0, // Handle empty string
+      income: Number(data.income) || 0, // Handle empty string
+      percent_income_to_invest: Number(data.percent_income_to_invest) || 0, // Handle empty string
+      preferable_sector: data.preferable_sector,
       access_token: localStorage.getItem("access_token"),
     };
     setPreferenceMutate(newData);
-    console.log("Form submitted:", data);
-    // Handle form submission logic here
+    console.log("Form submitted:", newData);
   };
 
   const handleRiskToleranceChange = (value) => {
-    setValue("riskTolerance", value);
+    setValue("risk_tolerance", value);
   };
 
   const handleSectorChange = (sector) => {
@@ -50,8 +49,7 @@ const PreferenceForm = () => {
     const updatedSectors = currentSectors.includes(sector)
       ? currentSectors.filter((s) => s !== sector)
       : [...currentSectors, sector];
-
-    setValue("sectors", updatedSectors);
+    setValue("preferable_sector", updatedSectors);
   };
 
   const investmentGoalOptions = [
@@ -245,7 +243,7 @@ const PreferenceForm = () => {
             btnType="submit"
             className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-700 text-white font-medium rounded-lg shadow transition-colors"
           >
-            Set Investment preference
+            Set Investment Preference
           </Button>
         </div>
       </form>
