@@ -12,6 +12,8 @@ function Profile() {
         type="danger"
         onClick={() => {
           localStorage.removeItem("access_token");
+          localStorage.removeItem("portfolio_summary");
+
           navigate("/signin");
           toast.success("Logged out successfully");
         }}

@@ -68,7 +68,13 @@ export default function StockPortfolioTable({ data, isLoading }) {
   // Calculate PnL percentage
   const calculatePnLPercentage = (stock) => {
     if (!stock.buy_price) return 0;
-    const pnl = stock.realized_unrealized_pnl;
+    var pnl = 0;
+    if (!stock.sell_price){
+      pnl = stock.unrealized_pnl
+    }
+    else{
+      pnl = stock.realized_pnl ;
+    }
     const investment = stock.buy_value || stock.buy_price * stock.quantity;
     return (pnl / investment) * 100;
   };
@@ -79,7 +85,14 @@ export default function StockPortfolioTable({ data, isLoading }) {
       return stock.taxed_amount; // Use pre-calculated tax if available
     }
 
-    const pnl = stock.realized_unrealized_pnl;
+    var pnl = 0;
+        if (!stock.sell_price){
+      pnl = stock.unrealized_pnl
+    }
+    else{
+      pnl = stock.realized_pnl ;
+    }
+
     if (pnl <= 0) return 0; // No tax on losses
 
     const buyDate = new Date(stock.buy_date);
@@ -99,11 +112,12 @@ export default function StockPortfolioTable({ data, isLoading }) {
     if (!stock.sell_price || !stock.sell_date) {
       status = "holding";
       colorClasses = "bg-blue-100 text-blue-800";
+      const pnl = stock.unrealized_pnl;
     } else {
       status = "sold";
-      const pnl = stock.realized_unrealized_pnl;
+      const pnl = stock.realized_pnl;
       colorClasses =
-        pnl >= 0 ? "bg-teal-100 text-teal-800" : "bg-red-100 text-red-800";
+        pnl >= 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
     }
 
     return <span className={`${baseClasses} ${colorClasses}`}>{status}</span>;
@@ -246,12 +260,7 @@ export default function StockPortfolioTable({ data, isLoading }) {
               >
                 Tax
               </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
+
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -292,41 +301,35 @@ export default function StockPortfolioTable({ data, isLoading }) {
                     <StatusChip stock={stock} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div
-                      className={`flex items-center text-sm ${
-                        stock.realized_unrealized_pnl >= 0
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {stock.realized_unrealized_pnl >= 0 ? (
-                        <HiArrowUp className="mr-1 h-4 w-4" />
-                      ) : (
-                        <HiArrowDown className="mr-1 h-4 w-4" />
+                  <div
+                    className={`flex items-center text-sm ${
+                      (stock.sell_date ? stock.realized_pnl : stock.unrealized_pnl) >= 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {(stock.sell_date
+                      ? stock.realized_pnl
+                      : stock.unrealized_pnl) >= 0 ? (
+                      <HiArrowUp className="mr-1 h-4 w-4" />
+                    ) : (
+                      <HiArrowDown className="mr-1 h-4 w-4" />
+                    )}
+                    <span>
+                      {formatCurrency(
+                        stock.sell_date ? stock.realized_pnl : stock.unrealized_pnl
                       )}
-                      <span>
-                        {formatCurrency(stock.realized_unrealized_pnl)}
-                      </span>
+                    </span>
                       <span className="ml-1">
                         ({calculatePnLPercentage(stock).toFixed(2)}%)
                       </span>
-                    </div>
+                  </div>
+
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatCurrency(calculateTax(stock))}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-800">
-                        More Details
-                      </button>
-                      <div className="relative">
-                        <button className="text-gray-500 hover:bg-gray-100 p-1 rounded-full">
-                          <HiOutlineEllipsisHorizontal className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
-                  </td>
+
                 </tr>
               ))
             ) : (

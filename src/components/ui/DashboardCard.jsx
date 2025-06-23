@@ -25,29 +25,37 @@ function DashboardCard({
           </div>
         )}
       </div>
-      <div className="flex flex-col">
-        <p className="text-lg font-semibold tracking-tight mb-1 font-mono">
-          {currency && (
-            <span className="text-slate-400 font-medium">{currency}</span>
-          )}{" "}
-          {value}
-        </p>
-        {percentage && (
-          <p className="text-xs text-slate-400 font-medium mt-1 font-mono">
-            <span
-              className={`${
-                trend === "up"
-                  ? "text-emerald-600 bg-emerald-50"
-                  : "text-red-600 bg-red-50"
-              } p-1 rounded mr-0.5`}
-            >
-              {trend === "up" ? "+" : "-"}
-              {percentage}%
-            </span>
-            {comparisonText}
-          </p>
-        )}
-      </div>
+        <div className="flex flex-col">
+  <p
+    className={`${
+      trend === "up"
+        ? "text-emerald-600"
+        : "text-red-600"
+    } font-semibold mb-1 font-mono`}
+  >
+    {currency && (
+      <span className="text-slate-400 font-medium">{currency}</span>
+    )}{" "}
+    {typeof value === "number" ? value.toLocaleString("en-IN") : value}
+  </p>
+  {percentage && (
+    <p className="text-xs text-emerald-400 font-medium mt-1 font-mono">
+      <span
+        className={`${
+          trend === "up"
+            ? "text-emerald-600 bg-emerald-50"
+            : trend === "down"
+            ? "text-red-600 bg-red-50"
+            : "text-slate-400 bg-slate-50"
+        } p-1 rounded mr-0.5`}
+      >
+        {trend === "up" ? "+" : trend === "down" ? "-" : "±"}
+        {percentage}%
+      </span>
+      {comparisonText}
+    </p>
+  )}
+</div>
     </div>
   );
 }

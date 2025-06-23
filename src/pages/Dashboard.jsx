@@ -34,11 +34,30 @@ function Dashboard() {
     mutateAsync: llmMutateAsync,
   } = useGetLLMMutation();
 
+  
   const [recommendationData, setRecommendationData] = useState(null);
   const [isLoadingRecommendations, setIsLoadingRecommendations] =
-    useState(false);
+  useState(false);
   const [recommendationError, setRecommendationError] = useState(null);
   const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false);
+  
+  useEffect(() => {
+    const savedLLMData = localStorage.getItem('portfolio_summary');
+    if (savedLLMData && !recommendationData) {
+      try {
+        const parsedData = JSON.parse(savedLLMData);
+        setSummaryData(parsedData);
+      } catch (error) {
+        console.error('Error parsing saved SUmmary data:', error);
+        // Clean up corrupted data
+        localStorage.removeItem('portfolio_summary');
+      }
+    }
+  }, [recommendationData]);
+  // State for calculated metrics
+  const [realizedGains, setRealizedGains] = useState(0);
+  const [unrealizedGains, setUnrealizedGains] = useState(0);
+  const [revenue, setRevenue] = useState(0);
 
   useEffect(() => {
     if (!hasAttemptedFetch) {
@@ -46,6 +65,38 @@ function Dashboard() {
       setHasAttemptedFetch(true);
     }
   }, [hasAttemptedFetch]);
+
+  // Calculate realized gains, unrealized gains, and revenue from transaction data
+  useEffect(() => {
+    if (!isLoading && !isError && transactionData ) {
+      let totalRealizedGains = 0;
+      let totalUnrealizedGains = 0;
+      let totalRevenue = 0;
+      console.log(transactionData);
+      console.log(isLoading);
+      console.log(isError)
+      if (Array.isArray(transactionData)) {
+        transactionData.forEach((transaction) => {
+          if (transaction.realized_pnl !== null) {
+            totalRealizedGains += Number(transaction.realized_pnl) || 0;
+          }
+          if (transaction.unrealized_pnl !== null) {
+            totalUnrealizedGains += Number(transaction.unrealized_pnl) || 0;
+          }
+          if (transaction.sell_date !== null && transaction.sell_value !== null) {
+            totalRevenue += Number(transaction.sell_value) || 0;
+          }
+        });
+      } else if (transactionData?.message === "No transactions found") {
+        totalRealizedGains = Number(transactionData.realized_gain) || 0;
+        totalUnrealizedGains = Number(transactionData.unrealized_gain) || 0;
+      }
+
+      setRealizedGains(totalRealizedGains.toFixed(2));
+      setUnrealizedGains(totalUnrealizedGains.toFixed(2));
+      setRevenue(totalRevenue.toFixed(2));
+    }
+  }, [transactionData, isLoading, isError]);
 
   const isCacheValid = () => {
     if (!recommendationCache.data || !recommendationCache.timestamp) {
@@ -109,30 +160,48 @@ function Dashboard() {
     fetchRecommendations();
   };
 
-  const handleSummarize = async () => {
-    const accessToken = localStorage.getItem("access_token");
+const handleSummarize = async () => {
+  const accessToken = localStorage.getItem("access_token");
 
-    if (!accessToken) {
-      console.error("No access token found");
-      return;
-    }
+  if (!accessToken) {
+    console.error("No access token found");
+    return;
+  }
 
-    const requestData = { access_token: accessToken };
-
+  // Check if data is already cached in localStorage
+  const savedLLMData = localStorage.getItem("portfolio_summary");
+  if (savedLLMData) {
     try {
-      const summaryResponse = await llmMutateAsync({
-        ...requestData,
-        endpoint: "summarize_llm/get_data", // Specify the endpoint
-      });
-      console.log("Summary data fetched:", summaryResponse);
-      setSummaryData(summaryResponse);
+      const parsedData = JSON.parse(savedLLMData);
+      setSummaryData(parsedData);
       setShowInsightsModal(true);
+      console.log("Loaded summary from localStorage");
+      return; // Skip API call
     } catch (error) {
-      console.error("Error fetching summary data:", error);
-      setSummaryData(null); // Fallback to default data in PortfolioInsights
-      setShowInsightsModal(true); // Still show modal with fallback
+      console.error("Corrupted summary data in localStorage");
+      localStorage.removeItem("portfolio_summary");
     }
-  };
+  }
+
+  // If no cached data, fetch from API
+  const requestData = { access_token: accessToken };
+
+  try {
+    const summaryResponse = await llmMutateAsync({
+      ...requestData,
+      endpoint: "summarize_llm/get_data",
+    });
+    console.log("Summary data fetched from API:", summaryResponse);
+    setSummaryData(summaryResponse);
+    localStorage.setItem("portfolio_summary", JSON.stringify(summaryResponse));
+    setShowInsightsModal(true);
+  } catch (error) {
+    console.error("Error fetching summary data:", error);
+    setSummaryData(null);
+    setShowInsightsModal(true);
+  }
+};
+
 
   const renderRecommendedStocks = () => {
     if (isLoadingRecommendations) {
@@ -168,7 +237,7 @@ function Dashboard() {
     }
 
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
         {recommendationData.recommendations.map((stock, index) => {
           if (!stock.stockname) return null;
           return (
@@ -194,7 +263,7 @@ function Dashboard() {
             icon={<HiSparkles />}
             type="primary"
             className="tracking-wide"
-            disabled={isLLMLoading} // Disable button while loading
+            disabled={isLLMLoading}
           >
             Portfolio Insights
           </Button>
@@ -206,29 +275,24 @@ function Dashboard() {
         <DashboardCard
           title="Realised Gains"
           icon={<HiTrendingUp />}
-          value="1,245"
-          currency={null}
-          percentage="5.7"
-          trend="up"
-          comparisonText="since last week"
+          value={isLoading ? "Loading..." : isError ? "N/A" : realizedGains}
+          currency="₹"
+          trend={isLoading || isError ? "down" : Number(unrealizedGains) > 0 ? "up" : "down"}
+
         />
         <DashboardCard
           title="Unrealised Gains"
           icon={<HiInbox />}
-          value="12,325.18"
+          value={isLoading ? "Loading..." : isError ? "N/A" : unrealizedGains}
           currency="₹"
-          percentage="3.8"
-          trend="down"
-          comparisonText="from previous quarter"
+          trend={isLoading || isError ? "down" : Number(unrealizedGains) > 0 ? "up" : "down"}
         />
         <DashboardCard
           title="Revenue"
           icon={<HiBanknotes />}
-          value="43,434.22"
+          value={isLoading ? "Loading..." : isError ? "N/A" : revenue}
           currency="₹"
-          percentage="21.32"
-          trend="up"
-          comparisonText="from last month"
+          trend={isLoading || isError ? "down" : Number(revenue) > 0 ? "up" : "down"}
         />
       </div>
 

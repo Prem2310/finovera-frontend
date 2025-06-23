@@ -247,27 +247,4 @@ const StockChart = ({ instrumentKey, stockName }) => {
     </div>
   );
 };
-
-// Example usage with multiple stocks
-// const MultiStockCharts = () => {
-//   const stocks = [
-//     { instrumentKey: "NSE_EQ|INE009A01021", name: "Infosys" },
-//     { instrumentKey: "NSE_EQ|INE467B01029", name: "TCS" },
-//     { instrumentKey: "NSE_EQ|INE030A01027", name: "Reliance" },
-//     { instrumentKey: "NSE_EQ|INE040A01034", name: "HDFC Bank" },
-//   ];
-
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       {stocks.map((stock) => (
-//         <StockChart
-//           key={stock.instrumentKey}
-//           instrumentKey={stock.instrumentKey}
-//           stockName={stock.name}
-//         />
-//       ))}
-//     </div>
-//   );
-// };
-
 export default StockChart;

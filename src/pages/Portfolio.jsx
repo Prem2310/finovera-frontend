@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageHeading from "../components/ui/PageHeading";
 import Button from "../components/Button";
 import ConnectAngelModal from "../components/ConnectAngelModal";
@@ -105,37 +105,36 @@ const mockData = {
   },
 };
 
-// CSV transaction data
-const csvTransactionData = [
-  {
-    ISIN: "INE129A01019",
-    buy_date: "2024-03-14",
-    buy_price: 174,
-    buy_value: 1740,
-    created_at: "2025-03-23T04:10:27.388123+00:00",
-    current_value: 0,
-    id: 1231,
-    quantity: 10,
-    realized_unrealized_pnl: 380,
-    sell_date: "2024-04-18",
-    sell_price: 212,
-    sell_value: 2120,
-    stock_name: "GAIL (INDIA) LTD",
-    taxed_amount: 76,
-    username: "fe",
-  },
-];
-
 function Portfolio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [showTransactions, setShowTransactions] = useState(false);
-
   const [message, setMessage] = useState(null);
   const [responseData, setResponseData] = useState(null);
+  
   const { transactionData, isLoading } = useGetUserTrnasMutation();
+  console.log(transactionData);
   const { mutate: useAngelMutate, isLoading: isAngelLoading } =
     useConnectAngelMutation();
+
+  // Load saved AngelOne data from localStorage on component mount
+  useEffect(() => {
+    const savedAngelData = localStorage.getItem('angelone_data');
+    const savedMessage = localStorage.getItem('angelone_message');
+    
+    if (savedAngelData && !responseData) {
+      try {
+        const parsedData = JSON.parse(savedAngelData);
+        setResponseData(parsedData);
+        setMessage(savedMessage || "Connected to AngelOne");
+      } catch (error) {
+        console.error('Error parsing saved AngelOne data:', error);
+        // Clean up corrupted data
+        localStorage.removeItem('angelone_data');
+        localStorage.removeItem('angelone_message');
+      }
+    }
+  }, [responseData]);
 
   const handleConnect = (formData) => {
     const connectData = {
@@ -148,10 +147,14 @@ function Portfolio() {
 
     useAngelMutate(connectData, {
       onSuccess: (res) => {
-        setResponseData(res); // <-- save response
+        setResponseData(res);
         setMessage("Successfully connected to AngelOne!");
         toast.success("Connected to AngelOne successfully");
         setIsModalOpen(false);
+        
+        // Save to localStorage for persistence across routes
+        localStorage.setItem('angelone_data', JSON.stringify(res));
+        localStorage.setItem('angelone_message', "Successfully connected to AngelOne!");
       },
       onError: (err) => {
         setMessage("Failed to connect. Please try again.");
@@ -163,6 +166,14 @@ function Portfolio() {
         console.error(err);
       },
     });
+  };
+
+  const handleDisconnect = () => {
+    setResponseData(null);
+    setMessage(null);
+    localStorage.removeItem('angelone_data');
+    localStorage.removeItem('angelone_message');
+    toast.success("Disconnected from AngelOne");
   };
 
   const formatCurrency = (value) => {
@@ -179,8 +190,8 @@ function Portfolio() {
     return <FullScreenLoader />;
   }
 
-  if(isLoading) {
-     return <FullScreenLoader />;
+  if (isLoading) {
+    return <FullScreenLoader />;
   }
 
   return (
@@ -189,28 +200,36 @@ function Portfolio() {
         <PageHeading>Portfolio and Tracking</PageHeading>
         <div className="flex gap-4 items-center">
           {console.log(responseData)}
-          {message ? (
-            <div className="text-green-500 border px-2 rounded">
-              {responseData.message}
+          {responseData && responseData.data ? (
+            <div className="text-red-500 border px-2 rounded flex items-center gap-2">
+              <button
+                onClick={handleDisconnect}
+              >
+                Disconnect
+              </button>
             </div>
-          ) : (
-            <div className="text-red-500 border px-2 rounded">
-              NOT CONNECTED
+          ) :(<div>
             </div>
-          )}
+            )
+          }
+          {!responseData ?(
           <Button
-            onClick={() => setIsModalOpen(true)}
-            type="outline"
-            className="w-fit font-semibold flex items-center gap-2"
-            icon={<HiLink className="text-lg" />}
+          onClick={() => setIsModalOpen(true)}
+          type="outline"
+          className="w-fit font-semibold flex items-center gap-2"
+          icon={<HiLink className="text-lg" />}
           >
             <span>Connect to</span>
             <img
               src={angel}
               alt="AngelOne"
               className="h-4 w-24 object-contain"
-            />
+              />
           </Button>
+          ):
+          <div>
+            </div>
+          }
         </div>
         <div className="flex min-h-screen w-full flex-col bg-gray-50">
           <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -232,16 +251,6 @@ function Portfolio() {
                       Overview
                     </button>
                     <button
-                      onClick={() => setActiveTab("analytics")}
-                      className={`px-4 py-2 text-sm font-medium rounded-md ${
-                        activeTab === "analytics"
-                          ? "bg-gray-100 text-gray-900"
-                          : "text-gray-500 hover:text-gray-700"
-                      }`}
-                    >
-                      Analytics
-                    </button>
-                    <button
                       onClick={() => setActiveTab("transactions")}
                       className={`px-4 py-2 text-sm font-medium rounded-md ${
                         activeTab === "transactions"
@@ -259,7 +268,7 @@ function Portfolio() {
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
               </div>
-            ) : !responseData && activeTab !== "transactions" ? (
+            ) : (!responseData || !responseData.data || !responseData.data.holdings) ? (
               <div className="flex flex-col items-center justify-center h-64 text-gray-500">
                 <div className="text-xl font-medium mb-2">
                   No Portfolio Data
@@ -383,7 +392,7 @@ function Portfolio() {
                       </div>
 
                       {/* Portfolio Allocation Chart */}
-                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden col-span-3">
+                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-hidden col-span-3">
                         <div className="p-6">
                           <h3 className="text-lg font-semibold text-gray-900">
                             Portfolio Allocation
@@ -413,46 +422,10 @@ function Portfolio() {
                   </div>
                 )}
 
-                {activeTab === "analytics" && (
-                  <div className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      {/* Performance Analysis Card */}
-                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden col-span-2">
-                        <div className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            Performance Analysis
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            Detailed performance metrics for your portfolio
-                          </p>
-                          <div className="h-[300px] flex items-center justify-center text-gray-400 mt-4">
-                            Analytics view coming soon
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Sector Allocation Card */}
-                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            Sector Allocation
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            Portfolio distribution by sectors
-                          </p>
-                          <div className="h-[300px] flex items-center justify-center text-gray-400 mt-4">
-                            Sector data not available
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {activeTab === "transactions" && (
                   <div className="space-y-4">
                     {/* Transactions Summary */}
-                    <TransactionsChart transactions={transactionData} />
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden col-span-3">
                         <div className="p-6">
@@ -466,7 +439,7 @@ function Portfolio() {
                                 Total Transactions
                               </p>
                               <div className="text-2xl font-bold text-gray-900">
-                                {csvTransactionData.length}
+                                {transactionData.length}
                               </div>
                             </div>
 
@@ -477,8 +450,8 @@ function Portfolio() {
                               </p>
                               <div className="text-2xl font-bold text-gray-900">
                                 {formatCurrency(
-                                  csvTransactionData.reduce(
-                                    (sum, item) => sum + item.buy_value,
+                                  transactionData.reduce(
+                                    (sum, item) => sum + (item.buy_value),
                                     0
                                   )
                                 )}
@@ -488,12 +461,12 @@ function Portfolio() {
                             {/* Total Returns */}
                             <div className="bg-gray-50 rounded-lg p-4">
                               <p className="text-sm font-medium text-gray-500">
-                                Total Returns
+                                Total Holdings Value
                               </p>
                               <div className="text-2xl font-bold text-gray-900">
                                 {formatCurrency(
-                                  csvTransactionData.reduce(
-                                    (sum, item) => sum + item.sell_value,
+                                  transactionData.reduce(
+                                    (sum, item) => sum + (item.buy_value) - (item.realized_pnl) + (item.unrealized_pnl),
                                     0
                                   )
                                 )}
@@ -501,15 +474,13 @@ function Portfolio() {
                             </div>
 
                             {/* Total P&L */}
-                            <div className="bg-gray-50 rounded-lg p-4">
+                                                          <div className="bg-gray-50 rounded-lg p-4">
                               <p className="text-sm font-medium text-gray-500">
                                 Total P&L
                               </p>
-                              <div
-                                className={`text-2xl font-bold ${
-                                  csvTransactionData.reduce(
-                                    (sum, item) =>
-                                      sum + item.realized_unrealized_pnl,
+                              <div className={`text-2xl font-bold ${
+                                  transactionData.reduce(
+                                      (sum, item) => sum + (item.realized_pnl) + (item.unrealized_pnl),
                                     0
                                   ) >= 0
                                     ? "text-green-500"
@@ -517,13 +488,12 @@ function Portfolio() {
                                 }`}
                               >
                                 {formatCurrency(
-                                  csvTransactionData.reduce(
-                                    (sum, item) =>
-                                      sum + item.realized_unrealized_pnl,
+                                  transactionData.reduce(
+                                    (sum, item) => sum + (item.realized_pnl) + (item.unrealized_pnl),
                                     0
                                   )
                                 )}
-                              </div>
+                            </div>
                             </div>
                           </div>
                         </div>
@@ -541,12 +511,12 @@ function Portfolio() {
                         </p>
                         <div className="mt-4">
                           <HoldingsChart
-                            holdings={csvTransactionData.map((transaction) => ({
+                            holdings={transactionData.map((transaction) => ({
                               tradingsymbol: transaction.stock_name,
                               profitandloss:
-                                transaction.realized_unrealized_pnl,
+                                transaction.sell_date ? transaction.realized_pnl : transaction.unrealized_pnl,
                               pnlpercentage: (
-                                (transaction.realized_unrealized_pnl /
+                                (transaction.sell_date ? transaction.realized_pnl : transaction.unrealized_pnl /
                                   transaction.buy_value) *
                                 100
                               ).toFixed(2),
