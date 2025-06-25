@@ -89,7 +89,7 @@ const ConnectAngelModal = ({ isOpen, onClose, onConnect }) => {
   const [formData, setFormData] = useState({
     client_id: "PWQX1073",
     mpin: "5110",
-    api_key: "GMiQnKVP",
+    api_key: "HlfzK6Q4",
     totp_secret: "ASEXNEB6KDHOJTY4Q5PJ3BKCHE",
   });
   const [errors, setErrors] = useState({});
